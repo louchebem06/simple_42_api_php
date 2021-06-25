@@ -1,12 +1,17 @@
 <?php
+	$website="";
 	$uid="";
 	$secret="";
-	$after_auth="";
-	$index="";
-	$logout="";
+
+	$after_auth="{$website}/token.php";
+	$index="{$website}/index.php";
+	$logout="{$website}/logout.php";
+	$auth = "https://api.intra.42.fr/oauth/authorize?client_id={$uid}&redirect_uri={$after_auth}&response_type=code";
 
 	function api_req($url_api)
 	{
+		global $logout;
+
 		$url = "https://api.intra.42.fr{$url_api}";
 
 		$curl = curl_init($url);
@@ -25,6 +30,18 @@
 		curl_close($curl);
 
 		$data = json_decode($resp);
+		if (isset($data->message) && $data->message == "The access token expired")
+		{
+			header('Location: '.$logout);
+			exit();
+		}
 		return ($data);
+	}
+
+	function view_data($data)
+	{
+		echo "<pre>";
+		echo json_encode($data, JSON_PRETTY_PRINT);
+		echo "</pre>";
 	}
 ?>

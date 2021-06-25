@@ -29,13 +29,6 @@
 		if (isset($data->access_token))
 			$_SESSION['token'] = $data->access_token;
 	}
-	
-	$data = api_req("/v2/me");
-
-	$_SESSION['nom'] = $data->last_name;
-	$_SESSION['prenom'] = $data->first_name;
-	$_SESSION['url_img'] = $data->image_url;
-
 	header('Location: '.$index);
 	exit();
 ?>
